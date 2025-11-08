@@ -5,11 +5,22 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sweet Saborium — Sweet</title>
 
-  <!-- Montserrat -->
+  <!-- Montserrat for UI text -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- NOTE: coloca 'fuente_saborium.ttf' (la BogartTrial) en la misma carpeta para el logo -->
   <style>
-    /* ===== FONT LOGO ===== */
+    /******************************************************************
+     * Sweet Saborium - sweetsaborium.html - STYLES
+     *
+     * Versión completa: diseño "sweet premium", espacioso, accesible,
+     * animaciones suaves, modal de producto, slide-in cesta, formulario
+     * animado con validaciones y copia al portapapeles.
+     *
+     * He intentado comentar ampliamente para que puedas tocar y ajustar.
+     ******************************************************************/
+
+    /* -------------------- Font for the logo (custom) -------------------- */
     @font-face {
       font-family: "BogartTrial";
       src: url("fuente_saborium.ttf") format("truetype");
@@ -18,601 +29,1085 @@
       font-display: swap;
     }
 
-    /* ===== RESET & BASE ===== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html,body { height:100%; font-family: "Montserrat", sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: linear-gradient(180deg,#fff7fb 0%, #fff3f6 100%); color:#111; }
-    a { color: inherit; text-decoration:none; }
+    /* -------------------- CSS RESET (light) -------------------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #fff7fb 0%, #fff2f6 100%);
+      color: #2b2024;
+      font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height: 1.45;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* ===== COLORS / THEME ===== */
+    /* -------------------- THEME VARIABLES -------------------- */
     :root{
-      --pink:#ffd8e0;
-      --pink-strong:#ffbfce;
-      --accent:#d4af37;
-      --card-bg: rgba(255,255,255,0.9);
-      --muted:#8b6f78;
-      --shadow: 0 8px 30px rgba(15,10,12,0.06);
+      --pink-1: #ffdbe6;
+      --pink-2: #ffc7d9;
+      --accent: #d4af37;
+      --muted: #7d5a60;
+      --card-bg: rgba(255,255,255,0.96);
+      --glass: rgba(255,255,255,0.65);
+      --shadow-soft: 0 10px 36px rgba(20,15,18,0.06);
+      --shadow-strong: 0 30px 80px rgba(10,6,8,0.12);
+      --radius-lg: 18px;
     }
 
-    /* ===== HEADER / LOGO ===== */
+    /* -------------------- PAGE LAYOUT -------------------- */
     header {
-      position: sticky;
-      top:0;
-      z-index:60;
-      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      backdrop-filter: blur(6px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding: 22px 28px;
+      max-width:1200px;
+      margin: 18px auto;
     }
-    .topbar {
-      max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center;
-    }
+
+    /* Logo block */
     .brand {
-      display:flex; flex-direction:column; gap:2px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      user-select: none;
     }
     .brand .logo {
-      font-family:"BogartTrial", serif; color: #ff9fb3; font-size:32px; font-weight:900; font-style:italic; letter-spacing:1px; text-transform:lowercase;
+      font-family: "BogartTrial", "Montserrat", serif;
+      color: #ff9fb3;
+      font-size: 34px;
+      font-weight: 900;
+      font-style: italic;
+      text-transform: lowercase;
+      letter-spacing: 0.6px;
+      line-height: 1;
     }
     .brand .by {
-      font-size:12px; background:#000; color:#fff; padding:3px 8px; border-radius:8px; margin-top:2px; display:inline-block; font-weight:600;
+      display:inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #000;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.12);
     }
 
-    /* ===== HOMEPANE - GABITY ===== */
-    .cover {
-      height:100vh; width:100%;
-      display:flex; align-items:center; justify-content:center;
-      background: radial-gradient(circle at 10% 10%, #fff0 0%, #fff0 40%), linear-gradient(180deg, #fff3f8 0%, #fff0 100%);
-      position:relative; overflow:hidden;
-    }
-    .cover .center {
-      text-align:center; padding:40px; max-width:980px;
-      transform-origin:center;
-    }
-    .cover h1 {
-      font-size:44px; color:#1b1b1b; margin-bottom:8px; letter-spacing:0.6px;
-    }
-    .cover p { color:#6b4f56; margin-bottom:18px; font-size:18px; }
-    .enter-btn {
-      display:inline-block; background: linear-gradient(180deg,var(--pink),var(--pink-strong));
-      color:#071018; padding:14px 26px; border-radius:999px; font-weight:700; box-shadow: var(--shadow);
-      border: none; cursor:pointer; transition: transform .24s ease, box-shadow .24s ease;
-      font-size:16px;
-    }
-    .enter-btn:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(15,10,12,0.08); }
-
-    /* subtle sugar texture */
-    .cover::after {
-      content:"";
-      position:absolute; inset:0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1px, transparent 1px);
-      background-size: 18px 18px; opacity:0.12; mix-blend-mode: overlay;
-      pointer-events:none;
-    }
-
-    /* ===== MAIN LAYOUT ===== */
-    main { max-width:1200px; margin:32px auto; padding:20px; display:flex; gap:28px; align-items:flex-start; }
-    .content { flex:1; }
-    aside.sidebar { width:340px; flex-shrink:0; position:sticky; top:110px; align-self:flex-start; }
-
-    /* ===== NEWS BAR (small, only Gabity removed from inner) ===== */
-    .news-banner {
-      display:flex; align-items:center; justify-content:center; gap:12px;
-      margin-bottom:18px; padding:12px; background: linear-gradient(90deg, rgba(255,220,230,0.6), rgba(255,245,247,0.5));
-      border-radius: 14px; border:1px solid rgba(0,0,0,0.03);
-      box-shadow: var(--shadow);
-    }
-    .news-banner strong { font-weight:700; color:#9b5a67; }
-
-    /* ===== GRID DE PRODUCTOS ===== */
-    .grid {
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap:22px;
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius:16px;
-      padding:16px;
+    /* Top info strip */
+    .top-info {
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 8px 20px;
       display:flex;
-      gap:16px;
-      align-items:flex-start;
-      box-shadow: var(--shadow);
-      transition: transform .22s ease, box-shadow .22s ease;
-    }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(20,15,18,0.06); }
-    .thumb {
-      width: 360px; height: 240px; flex-shrink:0; border-radius:12px; overflow:hidden; background:#f0e8ea;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-
-    .meta { flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
-    .meta h3 { font-size:20px; color:#111; }
-    .meta p { color:var(--muted); font-size:14px; line-height:1.4; }
-    .meta .price { font-weight:700; color:#b45f6a; margin-top:8px; }
-
-    .actions { display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
-    .btn {
-      padding:10px 14px; border-radius:12px; border:none; cursor:pointer; font-weight:600;
-      background:rgba(0,0,0,0.04); color:#111;
-    }
-    .btn.ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); }
-    .btn.primary {
-      background: linear-gradient(180deg,#ffd9e3,#ffc9d6);
-      color:#071018;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(90deg, rgba(255,219,232,0.8), rgba(255,245,247,0.5));
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.03);
+      box-shadow: var(--shadow-soft);
+      color: var(--muted);
+      font-weight: 600;
+      gap: 8px;
+      margin-bottom: 14px;
     }
 
-    /* ===== SIDEBAR: CESTA ===== */
-    .sidebar .card {
+    /* Small nav area (right side of header) */
+    .header-actions {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .tagline {
+      color: var(--muted);
+      font-weight:600;
+      font-size:13px;
+      display:none; /* hidden to keep header clean, shown on wider screens */
+    }
+
+    /* -------------------- MAIN GRID -------------------- */
+    .site {
+      max-width: 1200px;
+      margin: 0 auto 36px;
+      padding: 0 28px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 28px;
+      align-items:start;
+    }
+
+    /* Make sure we have margins left and right on mobile */
+    @media (max-width: 980px){
+      .site { grid-template-columns: 1fr; padding: 0 20px; }
+      .brand .logo { font-size: 28px; }
+      header { padding: 16px 20px; }
+    }
+
+    /* -------------------- CONTENT (products area) -------------------- */
+    .content {
+      padding-top: 6px;
+    }
+
+    /* Big introduction text (but not full-screen) */
+    .intro {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    .intro .left {
+      max-width: 72%;
+    }
+    .intro h2 {
+      color: #342227;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Products grid */
+    .products-grid {
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    /* Each product card: photo on top, content below */
+    .product {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      transition: transform .26s cubic-bezier(.2,.9,.2,1), box-shadow .26s ease;
+    }
+    .product:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 60px rgba(30,20,25,0.08);
+    }
+
+    .product .photo {
+      width: 100%;
+      height: 180px;            /* smaller photo so text has room */
+      border-radius: 12px;
+      overflow:hidden;
       display:block;
-      padding:14px;
-      border-radius:14px;
+      background: linear-gradient(180deg,#fff0,#fff);
+      position:relative;
     }
-    .cart-header { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-    .cart-list { margin-top:12px; display:flex; flex-direction:column; gap:10px; max-height:360px; overflow:auto; padding-right:6px; }
-    .cart-item { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px; border-radius:10px; background:linear-gradient(180deg,#fff,#fff); border:1px solid rgba(0,0,0,0.03); }
+    .product .photo img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transition: transform .6s ease;
+    }
+    .product .photo:hover img { transform: scale(1.03); }
+
+    .product h3 {
+      font-size: 18px;
+      color: #4a2330;
+      margin: 0;
+    }
+    .product .desc {
+      color: var(--muted);
+      font-size: 13.5px;
+      min-height: 42px; /* keep cards similar height */
+    }
+    .product .meta {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .price {
+      font-weight:800;
+      color: #b85d72;
+    }
+
+    .product .actions {
+      display:flex;
+      gap:10px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      font-weight:600;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btn.ghost {
+      background: transparent;
+      color: #4a2d33;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, var(--pink-1), var(--pink-2));
+      color: #071018;
+      box-shadow: 0 6px 20px rgba(15,10,12,0.06);
+    }
+
+    /* -------------------- SLIDE-IN CART (panel derecho) -------------------- */
+    .cart-toggle {
+      position: fixed;
+      right: 20px;
+      top: 22px;
+      z-index: 140;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .cart-btn {
+      background: linear-gradient(180deg,var(--pink-1),var(--pink-2));
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: var(--shadow-soft);
+      border: none;
+    }
+
+    /* Slide-in panel */
+    .cart-panel {
+      position: fixed;
+      right: -420px; /* hidden by default */
+      top: 0;
+      height: 100vh;
+      width: 400px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), #fff);
+      box-shadow: -40px 0 80px rgba(10,6,8,0.08);
+      z-index: 200;
+      transition: right .42s cubic-bezier(.2,.9,.2,1);
+      padding: 22px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .cart-panel.open { right: 20px; }
+
+    .cart-panel .head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .cart-panel h3 { margin:0; color:#4a2330; }
+    .close-panel {
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border-radius: 10px;
+      padding: 6px 8px;
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .cart-items {
+      flex:1;
+      overflow:auto;
+      padding-right:6px;
+      margin-top:6px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .cart-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
+      border: 1px solid rgba(0,0,0,0.03);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:space-between;
+    }
     .cart-item .info { min-width:0; }
-    .cart-item .info .name { font-weight:700; color:#222; font-size:14px; }
-    .cart-item .controls { display:flex; gap:6px; align-items:center; }
-    .small-btn { padding:6px 8px; border-radius:8px; background:transparent; border:1px solid rgba(0,0,0,0.06); cursor:pointer; }
+    .cart-item .info .name { font-weight:700; color:#3a2228; font-size:14px; }
+    .cart-item .qtyctrl { display:flex; gap:8px; align-items:center; }
 
-    .total-row { margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-weight:700; color:#222; font-size:16px; }
+    .cart-summary {
+      border-top: 1px dashed rgba(0,0,0,0.04);
+      padding-top: 10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
 
-    .checkout-buttons { margin-top:14px; display:flex; gap:10px; }
+    .cart-actions {
+      display:flex;
+      gap:10px;
+      margin-top:8px;
+    }
 
-    /* ===== FORM MODAL (checkout) ===== */
-    .overlay { position:fixed; inset:0; background: rgba(10,7,9,0.6); display:none; align-items:center; justify-content:center; z-index:120; padding:18px; }
+    /* -------------------- PRODUCT DETAIL MODAL (cartulina) -------------------- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items:center;
+      justify-content:center;
+      z-index: 300;
+      background: rgba(10,7,9,0.48);
+      backdrop-filter: blur(4px) saturate(1.03);
+      padding: 20px;
+    }
     .overlay.active { display:flex; }
-    .modal {
-      width: min(880px, 96%); max-height:92vh; overflow:auto; border-radius:14px; background: #fff; padding:18px; box-shadow: 0 30px 80px rgba(10,6,8,0.5);
-      display:grid; grid-template-columns: 1fr 1fr; gap:16px;
-    }
-    .modal .photo { border-radius:10px; overflow:hidden; height:100%; }
-    .modal img { width:100%; height:100%; object-fit:cover; display:block; }
-    .modal .info h3 { margin-bottom:8px; color:#111; }
-    .modal .info p { color:#4c3a3e; }
 
-    /* Close button improved */
-    .close-x {
-      position:absolute; right:12px; top:12px; width:40px; height:40px; border-radius:999px; display:flex; align-items:center; justify-content:center;
-      background: rgba(0,0,0,0.6); color:#fff; cursor:pointer; font-weight:800; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    .modal-card {
+      width: min(920px, 96%);
+      max-height: 92vh;
+      overflow:auto;
+      border-radius: 16px;
+      background: linear-gradient(180deg,#fff,#fff);
+      padding: 18px;
+      box-shadow: var(--shadow-strong);
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      position: relative;
+    }
+    @media (max-width:980px) { .modal-card { grid-template-columns: 1fr; } }
+
+    .modal-photo { border-radius: 12px; overflow:hidden; height:100%; min-height:280px; }
+    .modal-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .modal-info { padding:4px 6px; display:flex; flex-direction:column; gap:10px; }
+    .modal-info h3 { margin:0; color:#3a2228; }
+    .modal-info p { margin:0; color:#5f4248; font-size:14px; line-height:1.45; }
+
+    .modal-info .meta-box {
+      background: #fff7f9;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid rgba(0,0,0,0.02);
+      color: #6b4f56;
+      font-size: 13px;
     }
 
-    /* ===== CHECKOUT FORM MODAL ===== */
-    .form-modal { width:520px; max-width:96%; padding:18px; border-radius:12px; background:var(--card-bg); box-shadow:var(--shadow); }
-    .form-modal h4 { margin-bottom:8px; font-size:18px; }
-    .form-row { display:flex; gap:8px; margin-top:8px; }
-    .form-row .col { flex:1; display:flex; flex-direction:column; gap:8px; }
+    .modal-close {
+      position:absolute;
+      right:12px;
+      top:12px;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      background: rgba(0,0,0,0.7);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    }
+
+    /* -------------------- CHECKOUT FORM MODAL -------------------- */
+    .form-overlay { position: fixed; inset:0; display:none; align-items:center; justify-content:center; z-index: 320; background: rgba(7,4,6,0.5); padding:20px; }
+    .form-overlay.active { display:flex; }
+
+    .checkout-form {
+      width: 720px;
+      max-width: 96%;
+      border-radius: 12px;
+      background: var(--card-bg);
+      padding: 18px;
+      box-shadow: var(--shadow-strong);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:16px;
+    }
+    @media (max-width:980px) { .checkout-form { grid-template-columns: 1fr; } }
+
+    .checkout-left { display:flex; flex-direction:column; gap:10px; }
+    .checkout-right { background: linear-gradient(180deg,#fff,#fff); padding:12px; border-radius:12px; border:1px solid rgba(0,0,0,0.03); }
+
+    label { font-size:13px; color: #5f4248; font-weight:600; display:block; margin-bottom:6px; }
     input[type="text"], input[type="email"], input[type="tel"], textarea, select {
-      padding:10px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); font-family:"Montserrat",sans-serif;
-      font-size:14px; outline:none;
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid rgba(0,0,0,0.06);
+      font-size:14px;
+      outline:none;
+      background:white;
     }
-    textarea { resize:vertical; min-height:64px; }
+    textarea { min-height:90px; resize:vertical; }
 
-    /* Address animation */
-    .address-field { max-height:0; opacity:0; transform:translateY(-6px); overflow:hidden; transition: all .36s cubic-bezier(.2,.9,.2,1); }
-    .address-field.open { max-height:120px; opacity:1; transform:translateY(0); padding-top:8px; }
-
-    /* RESPONSIVE */
-    @media (max-width: 980px) {
-      main { flex-direction:column; padding:14px; }
-      aside.sidebar { width:100%; position:static; top:auto; }
-      .modal { grid-template-columns: 1fr; }
-      .thumb { width:100%; height:200px; }
+    .address-animate {
+      max-height:0;
+      opacity:0;
+      transform: translateY(-8px);
+      overflow:hidden;
+      transition: all .42s cubic-bezier(.2,.9,.2,1);
     }
+    .address-animate.open {
+      max-height:160px;
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .form-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:8px; }
+
+    /* -------------------- FOOTER -------------------- */
+    footer {
+      max-width:1200px;
+      margin: 40px auto 80px;
+      padding: 18px 28px;
+      text-align:center;
+      color: var(--muted);
+    }
+    footer .legal { margin-top:8px; font-size:13px; color:#b05b73; }
+
+    /* -------------------- HELPERS -------------------- */
+    .muted { color: var(--muted); }
+    .small { font-size:12px; color:#8b6f78; }
+
+    /* smooth scrolling for anchor interactions */
+    html { scroll-behavior: smooth; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- =========================
+       HEADER: LOGO + INFO
+       ========================= -->
   <header>
-    <div class="topbar">
-      <div class="brand" aria-hidden="true">
-        <div class="logo">sweet saborium</div>
-        <div class="by">by saborium.</div>
-      </div>
+    <div class="brand" aria-hidden="true">
+      <div class="logo">sweet saborium</div>
+      <div class="by">by saborium.</div>
+    </div>
 
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="font-weight:700;color:#9b5a67;">Sweet · Premium</div>
-        <button id="openCartBtn" class="btn ghost" onclick="toggleCart()">🧺 Cesta (<span id="cartCount">0</span>)</button>
+    <!-- header right actions (cart button) -->
+    <div class="header-actions" role="navigation" aria-label="Acciones principales">
+      <div class="tagline">Sweet · Premium</div>
+      <!-- Cart toggle visible on top-right -->
+      <div class="cart-toggle" style="position:relative;">
+        <button id="openCartTop" class="cart-btn" aria-controls="cartPanel" aria-expanded="false" title="Abrir cesta">
+          🧺 Cesta <span id="topCartCount" style="margin-left:8px;font-weight:700;color:#7a3d45">0</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- COVER (Gabity) -->
-  <section class="cover" id="cover">
-    <div class="center" role="region" aria-label="Anuncio temporada Gabity">
-      <h1>Temporada Sweet Saborium — Edición Navidad</h1>
-      <p>En colaboración con <strong>Gabity</strong>. Apertura: <strong>1 de diciembre</strong>. ¡Haz tu reserva!</p>
-      <button class="enter-btn" id="enterBtn">Entrar</button>
-    </div>
-  </section>
+  <!-- Top info (only the single line as requested) -->
+  <div class="top-info" role="status" aria-live="polite">
+    Temporada Navidad · Gabity · Reservas desde 1 de diciembre
+  </div>
 
-  <!-- MAIN -->
-  <main id="mainContent" style="opacity:0; transform: translateY(12px); transition: all .6s cubic-bezier(.2,.9,.2,1);">
-    <div class="content">
-      <div class="news-banner">
-        <div style="font-weight:700;color:#7a4950">Temporada Navidad · Gabity · Reservas desde 1 de diciembre</div>
+  <!-- SITE (main two-column layout) -->
+  <div class="site" role="main" aria-label="Catálogo y Cesta">
+
+    <!-- ============ CONTENT ============ -->
+    <section class="content" aria-labelledby="catalogTitle">
+      <div class="intro" role="region" aria-label="Introducción">
+        <div class="left">
+          <h2 id="catalogTitle">Sweet Saborium — Selección</h2>
+          <p>Selecciona tus dulces favoritos. Pulsa "Ver más" para ver detalles, ingredientes y alérgenos. Añade a la cesta y finaliza con el formulario.</p>
+        </div>
+        <div class="right small muted">
+          <div>Precios indicativos: 0.00 € (placeholder)</div>
+        </div>
       </div>
 
-      <!-- GRID PRODUCTS -->
-      <section class="grid" id="productsGrid" aria-live="polite">
+      <!-- PRODUCTS GRID -->
+      <div class="products-grid" id="productsGrid" aria-live="polite">
+        <!-- Product cards will be rendered here by JavaScript for clarity and maintainability.
+             Each card follows: photo (top), name, short desc, price, actions.
+             We generate multiple cards to make the page robust and full. -->
+      </div>
 
-        <!-- Nuestra Tarta (producto estrella) -->
-        <article class="card" data-id="p1" data-name="Nuestra Tarta">
-          <div class="thumb">
-            <img src="https://via.placeholder.com/1200x800.png?text=Nuestra+Tarta" alt="Nuestra Tarta">
-          </div>
-          <div class="meta">
-            <h3>Nuestra Tarta</h3>
-            <p>La original de Sweet Saborium: cremosa por dentro, ligeramente tostada por fuera. Nuestro producto estrella con receta de arrancada.</p>
-            <div class="price">0.00 €</div>
-            <div class="actions">
-              <button class="btn primary" onclick="addToCart('p1')">Añadir a la cesta</button>
-              <button class="btn ghost" onclick="openProductModal('p1')">Ver más</button>
-            </div>
-          </div>
-        </article>
+    </section>
 
-        <!-- Lorem Ipsum products -->
-        <article class="card" data-id="p2" data-name="Lorem Ipsum">
-          <div class="thumb"><img src="https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+1" alt="Lorem Ipsum"></div>
-          <div class="meta">
-            <h3>Lorem Ipsum</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a urna non ipsum gravida.</p>
-            <div class="price">0.00 €</div>
-            <div class="actions">
-              <button class="btn primary" onclick="addToCart('p2')">Añadir a la cesta</button>
-              <button class="btn ghost" onclick="openProductModal('p2')">Ver más</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" data-id="p3" data-name="Lorem Ipsum">
-          <div class="thumb"><img src="https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+2" alt="Lorem Ipsum"></div>
-          <div class="meta">
-            <h3>Lorem Ipsum</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce id justo non lorem efficitur.</p>
-            <div class="price">0.00 €</div>
-            <div class="actions">
-              <button class="btn primary" onclick="addToCart('p3')">Añadir a la cesta</button>
-              <button class="btn ghost" onclick="openProductModal('p3')">Ver más</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" data-id="p4" data-name="Lorem Ipsum">
-          <div class="thumb"><img src="https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+3" alt="Lorem Ipsum"></div>
-          <div class="meta">
-            <h3>Lorem Ipsum</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non urna vitae lectus fringilla.</p>
-            <div class="price">0.00 €</div>
-            <div class="actions">
-              <button class="btn primary" onclick="addToCart('p4')">Añadir a la cesta</button>
-              <button class="btn ghost" onclick="openProductModal('p4')">Ver más</button>
-            </div>
-          </div>
-        </article>
-
-      </section>
-    </div>
-
-    <!-- SIDEBAR CART -->
-    <aside class="sidebar">
-      <div class="card">
-        <div class="cart-header">
-          <div style="font-weight:800;color:#4b2f33">Tu pedido</div>
-          <div style="color:#b45f6a;font-weight:700" id="miniTotal">0.00 €</div>
+    <!-- ============ SIDEBAR / CART PANEL (initial view shows button that slides in) ============ -->
+    <aside aria-label="Cesta y resumen" style="align-self:start;">
+      <!-- Minimal placeholder card in sidebar to keep layout balanced on wide screens -->
+      <div style="background:var(--card-bg); padding:14px; border-radius:14px; box-shadow:var(--shadow-soft); border:1px solid rgba(0,0,0,0.03);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-weight:800;color:#4a2330">Tu pedido</div>
+          <div id="miniTotal" style="font-weight:800;color:#b85d72">0.00 €</div>
         </div>
-
-        <div class="cart-list" id="cartList">
-          <div style="color:#7b6166;font-size:13px;">Añade algo a la cesta para empezar tu pedido.</div>
-        </div>
-
-        <div class="total-row">
-          <div>Total</div>
-          <div id="cartTotal">0.00 €</div>
-        </div>
-
-        <div class="checkout-buttons">
-          <button class="btn ghost" id="clearBtn">Vaciar cesta</button>
-          <button class="btn primary" id="checkoutBtn" onclick="openCheckoutForm()">Hacer pedido</button>
+        <div id="miniList" style="margin-top:8px;color:var(--muted);font-size:13px;">Añade algo a la cesta para empezar.</div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="btn ghost" id="clearBtnSidebar">Vaciar</button>
+          <button class="btn primary" id="checkoutBtnSidebar">Hacer pedido</button>
         </div>
       </div>
     </aside>
-  </main>
+  </div>
 
-  <!-- PRODUCT MODAL (detalle) -->
-  <div id="productOverlay" class="overlay" onclick="overlayClick(event)">
-    <div class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="photo">
-        <img id="modalImg" src="" alt="Foto producto">
+  <!-- =========================
+       SLIDE-IN CART PANEL (hidden by default)
+       ========================= -->
+  <div id="cartPanel" class="cart-panel" role="dialog" aria-hidden="true" aria-label="Cesta de compra">
+    <div class="head">
+      <h3>Tu pedido 🍬</h3>
+      <button class="close-panel" id="closeCartPanel" aria-label="Cerrar cesta">✕</button>
+    </div>
+
+    <div class="cart-items" id="cartItems" aria-live="polite">
+      <!-- Items will be dynamically inserted here -->
+      <div style="color:var(--muted)">Tu cesta está vacía. Añade tus favoritos.</div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="small muted">Total</div>
+      <div id="cartTotal" style="font-weight:800;color:#b85d72">0.00 €</div>
+    </div>
+
+    <div class="cart-actions">
+      <button class="btn ghost" id="clearCartBtn">Vaciar cesta</button>
+      <button class="btn primary" id="openCheckoutBtn">Hacer pedido</button>
+    </div>
+
+    <div style="margin-top:10px;font-size:12px;color:var(--muted);">
+      Métodos de pago únicos aceptados: Efectivo con antelación o Bizum al <strong>644677582</strong>.
+    </div>
+  </div>
+
+  <!-- =========================
+       PRODUCT DETAIL MODAL (CARTULINA)
+       ========================= -->
+  <div id="productOverlay" class="overlay" aria-hidden="true">
+    <div class="modal-card" role="document" aria-labelledby="modalTitle">
+      <div class="modal-photo">
+        <img id="modalImage" src="" alt="Foto del producto">
       </div>
-      <div class="info" style="position:relative;">
-        <div class="close-x" onclick="closeProductModal()" aria-label="Cerrar">✕</div>
-        <h3 id="modalTitle">Título</h3>
-        <p id="modalShort" style="color:var(--muted);"></p>
-        <p id="modalLong" style="margin-top:10px;color:#5a3f43;"></p>
+      <div class="modal-info">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <h3 id="modalTitle">Título del producto</h3>
+          <div class="modal-close" id="modalCloseBtn" aria-label="Cerrar detalle">✕</div>
+        </div>
+        <p id="modalShort" style="color:var(--muted);font-size:14px;">Breve descripción corta...</p>
 
-        <div style="margin-top:12px;">
-          <strong>Ingredientes</strong>
-          <p id="modalIngredients" style="color:#6b4f56;font-size:13px;margin-top:6px;"></p>
+        <div style="margin-top:6px;">
+          <div class="meta-box">
+            <strong>Descripción completa</strong>
+            <p id="modalLong" style="margin-top:8px;color:#6b4f56;">Texto largo del producto. Lorem ipsum dolor sit amet...</p>
+          </div>
 
-          <strong style="display:block;margin-top:8px;">Alérgenos</strong>
-          <p id="modalAllergens" style="color:#6b4f56;font-size:13px;margin-top:6px;"></p>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <div style="flex:1">
+              <strong>Ingredientes</strong>
+              <p id="modalIngredients" style="color:#6b4f56;margin-top:6px;">(Ingredientes)</p>
+            </div>
+            <div style="flex:1">
+              <strong>Alérgenos</strong>
+              <p id="modalAllergens" style="color:#6b4f56;margin-top:6px;">(Alérgenos)</p>
+            </div>
+          </div>
         </div>
 
-        <div style="margin-top:14px;display:flex;gap:10px;">
+        <div style="margin-top:12px;display:flex;gap:10px;">
           <button class="btn primary" id="modalAddBtn">Añadir a la cesta</button>
-          <button class="btn ghost" onclick="closeProductModal()">Cerrar</button>
+          <button class="btn ghost" id="modalCloseBtn2">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CHECKOUT FORM MODAL -->
-  <div id="checkoutOverlay" class="overlay" onclick="overlayClick(event)">
-    <div class="form-modal" role="dialog" aria-modal="true" aria-hidden="true" style="position:relative;">
-      <div class="close-x" onclick="closeCheckout()" aria-label="Cerrar">✕</div>
-      <h4>Finalizar pedido</h4>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Rellena los datos para que podamos preparar tu pedido.</div>
+  <!-- =========================
+       CHECKOUT FORM OVERLAY
+       - This is the animated form where address spawns if delivery selected
+       ========================= -->
+  <div id="checkoutOverlay" class="form-overlay" aria-hidden="true">
+    <div class="checkout-form" role="form" aria-labelledby="checkoutTitle">
+      <div class="checkout-left">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <h3 id="checkoutTitle" style="margin:0;color:#4a2330">Finalizar pedido</h3>
+          <div style="font-size:13px;color:var(--muted)">Rellena los datos para preparar tu pedido</div>
+        </div>
 
-      <div class="form-row">
-        <div class="col">
-          <label style="font-size:13px;color:#6b4f56">Nombre (obligatorio)</label>
-          <input type="text" id="custName" placeholder="Ej. Ana Pérez">
+        <div style="margin-top:6px;">
+          <label for="custName">Nombre completo (obligatorio)</label>
+          <input id="custName" type="text" placeholder="Ej. Ana Pérez" autocomplete="name" required>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <div style="flex:1;">
+            <label for="deliveryType">Recogida / Envío</label>
+            <select id="deliveryType" aria-controls="addressBlock">
+              <option value="pickup">Recoger en Olalde Kalea</option>
+              <option value="delivery">Envío a domicilio (+3.00€)</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label for="emailField">Correo electrónico (obligatorio)</label>
+            <input id="emailField" type="email" placeholder="correo@ejemplo.com" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div id="addressBlock" class="address-animate" aria-hidden="true" style="margin-top:10px;">
+          <label for="addressField">Dirección de envío (obligatorio si elegiste envío)</label>
+          <input id="addressField" type="text" placeholder="Calle, número, piso, ciudad... (ej. Olalde Kalea 5, 2º)" autocomplete="street-address">
+        </div>
+
+        <div style="margin-top:8px;display:flex;gap:10px;">
+          <div style="flex:1;">
+            <label for="phoneField">Teléfono (obligatorio)</label>
+            <input id="phoneField" type="tel" placeholder="600 000 000" autocomplete="tel">
+          </div>
+          <div style="flex:1;">
+            <label for="discountField">Código descuento (opcional)</label>
+            <input id="discountField" type="text" placeholder="CUPON123">
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label for="noteField">Nota (opcional)</label>
+          <textarea id="noteField" placeholder="Algo que debamos saber (alérgenos, packaging, fecha)..."></textarea>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end;">
+          <button class="btn ghost" id="closeCheckoutBtn">Volver</button>
+          <button class="btn primary" id="confirmCheckoutBtn">Confirmar y copiar pedido</button>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col">
-          <label style="font-size:13px;color:#6b4f56">Recogida / Envío</label>
-          <select id="deliverySelect">
-            <option value="pickup">Recoger en Olalde Kalea</option>
-            <option value="delivery">Envío a domicilio (+3.00€)</option>
-          </select>
+      <aside class="checkout-right" aria-hidden="false">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-weight:800;color:#4a2330">Resumen</div>
+          <div id="checkoutMiniTotal" style="font-weight:800;color:#b85d72">0.00 €</div>
         </div>
-        <div class="col address-field" id="addressBlock">
-          <label style="font-size:13px;color:#6b4f56">Dirección (si envío)</label>
-          <input type="text" id="addressField" placeholder="Calle, número, piso...">
+
+        <div id="checkoutItems" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto;padding-right:6px;">
+          <!-- dynamic cart summary -->
         </div>
-      </div>
 
-      <div class="form-row" style="margin-top:8px;">
-        <div class="col">
-          <label style="font-size:13px;color:#6b4f56">Correo electrónico (obligatorio)</label>
-          <input type="email" id="emailField" placeholder="correo@ejemplo.com">
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+          <strong>Métodos de pago únicos aceptados:</strong><br> Efectivo con antelación o Bizum al <strong>644677582</strong>.
         </div>
-        <div class="col">
-          <label style="font-size:13px;color:#6b4f56">Teléfono (obligatorio)</label>
-          <input type="tel" id="phoneField" placeholder="600 000 000">
-        </div>
-      </div>
-
-      <div style="margin-top:8px;">
-        <label style="font-size:13px;color:#6b4f56">Nota (opcional)</label>
-        <textarea id="noteField" placeholder="Algo que debamos saber..."></textarea>
-      </div>
-
-      <div style="margin-top:8px;">
-        <label style="font-size:13px;color:#6b4f56">Código descuento (opcional)</label>
-        <input type="text" id="discountField" placeholder="CUPON123">
-      </div>
-
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn ghost" onclick="closeCheckout()">Volver</button>
-        <button class="btn primary" onclick="checkout()">Confirmar y copiar pedido</button>
-      </div>
+      </aside>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer style="margin-top:36px;padding:28px 16px;text-align:center;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));">
-    <div style="font-weight:700;color:#7a4950">Sweet Saborium of Saborium.</div>
+  <!-- =========================
+       FOOTER
+       ========================= -->
+  <footer>
+    <div style="font-weight:800;color:#7a4950">Sweet Saborium of Saborium.</div>
     <div style="margin-top:6px;color:var(--muted);font-size:13px">© 2025 Todos los derechos reservados.</div>
-    <div style="margin-top:8px;font-size:13px;color:#b45f6a">
-      <a href="#" style="color:inherit">Condiciones de servicio</a> · <a href="#" style="color:inherit">Política de privacidad</a>
+    <div class="legal" style="margin-top:8px;">
+      <a href="#" style="color:#b85d72">Condiciones de servicio</a> · <a href="#" style="color:#b85d72">Política de privacidad</a>
     </div>
   </footer>
 
+  <!-- =========================
+       SCRIPT: products, cart, UI logic
+       ========================= -->
   <script>
-    /* ===== DATA ===== */
-    const products = {
-      p1: {
-        id:'p1', name:'Nuestra Tarta',
-        short:'La original de Sweet Saborium: cremosa por dentro y ligeramente tostada por fuera.',
-        long:'Nuestra tarta de queso al horno, receta tradicional y lentamente horneada para una textura sedosa. Ideal para compartir o como pieza estrella.',
-        ingredients:'Queso crema, huevos, azúcar, nata, base de galleta (mantequilla).',
-        allergens:'Contiene: leche, huevo, gluten (base).',
-        price: '0.00',
-        img: 'https://via.placeholder.com/1200x800.png?text=Nuestra+Tarta'
-      },
-      p2: {
-        id:'p2', name:'Lorem Ipsum', short:'Lorem ipsum dolor sit amet.',
-        long:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non lorem vel magna cursus gravida.',
-        ingredients:'(Ingredientes demo)',
-        allergens:'(Alérgenos demo)',
-        price:'0.00',
-        img: 'https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+1'
-      },
-      p3: {
-        id:'p3', name:'Lorem Ipsum', short:'Lorem ipsum dolor sit amet.',
-        long:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti.',
-        ingredients:'(Ingredientes demo)',
-        allergens:'(Alérgenos demo)',
-        price:'0.00',
-        img: 'https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+2'
-      },
-      p4: {
-        id:'p4', name:'Lorem Ipsum', short:'Lorem ipsum dolor sit amet.',
-        long:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        ingredients:'(Ingredientes demo)',
-        allergens:'(Alérgenos demo)',
-        price:'0.00',
-        img: 'https://via.placeholder.com/1200x800.png?text=Lorem+Ipsum+3'
-      }
-    };
+    /**************************************************************************
+     * Sweetsaborium - Client logic
+     * - Render products grid dynamically (photo above, smaller, with spacing)
+     * - Product modal (detail) with add-to-cart
+     * - Slide-in cart panel (not overflowing)
+     * - Checkout form (address spawn animation)
+     * - Validations and copy-to-clipboard + redirect to Google Forms
+     *
+     * Revisa los comentarios si quieres cambiar comportamientos o textos.
+     **************************************************************************/
 
-    /* ===== CART ===== */
-    let cart = {}; // {id: qty}
-    const cartCountEl = document.getElementById('cartCount');
-    const cartListEl = document.getElementById('cartList');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const miniTotalEl = document.getElementById('miniTotal');
-
-    function renderCart(){
-      const entries = Object.entries(cart);
-      const totalQty = entries.reduce((s,[_,q])=>s+q,0);
-      cartCountEl.textContent = totalQty;
-      if(entries.length===0){
-        cartListEl.innerHTML = '<div style="color:#7b6166;font-size:13px;">Añade algo a la cesta para empezar tu pedido.</div>';
-        cartTotalEl.textContent = '0.00 €';
-        miniTotalEl.textContent = '0.00 €';
-        return;
+    /* -------------------- PRODUCTS DATA -------------------- */
+    // The images are placeholder links (Unsplash). Replace as needed.
+    const products = [
+      {
+        id: 'p1',
+        name: 'Nuestra Tarta',
+        short: 'La original de Sweet Saborium: cremosa por dentro y ligeramente tostada por fuera.',
+        long: 'Nuestra tarta de queso al horno, receta tradicional de Sweet Saborium, horneada lentamente para conseguir una textura sedosa y el punto tostado perfecto en la superficie. Ideal como pieza central o para compartir.',
+        ingredients: 'Queso crema, huevos, azúcar, nata, galleta (mantequilla).',
+        allergens: 'Contiene: leche, huevo, gluten (en la base).',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1606313564200-e75d5e1e8e46?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p2',
+        name: 'Lorem Ipsum',
+        short: 'Delicado postre con texturas suaves.',
+        long: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus volutpat augue vitae sapien ultricies, in facilisis arcu condimentum.',
+        ingredients: '(Ingredientes de ejemplo: fresa, nata, azúcar)',
+        allergens: 'Contiene: leche.',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1599785209796-8b2e8362f7c4?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p3',
+        name: 'Lorem Ipsum',
+        short: 'Bocado crujiente con crema.',
+        long: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Vivamus vel posuere nibh.',
+        ingredients: '(Ingredientes demo)',
+        allergens: '(Alérgenos demo)',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p4',
+        name: 'Lorem Ipsum',
+        short: 'Pequeño dulce con caramelo salado.',
+        long: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer at justo vitae augue convallis aliquet.',
+        ingredients: '(Ingredientes demo)',
+        allergens: '(Alérgenos demo)',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1542838687-79c9b9f3d4b5?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p5',
+        name: 'Lorem Ipsum',
+        short: 'Trufa intensa y fundente.',
+        long: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id massa a leo suscipit dictum.',
+        ingredients: '(Ingredientes demo)',
+        allergens: '(Alérgenos demo)',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=1200&q=80'
       }
-      cartListEl.innerHTML = '';
-      let total = 0;
-      entries.forEach(([id,qty])=>{
-        const p = products[id];
-        total += 0.00 * qty;
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-          <div class="info">
-            <div class="name">${p.name}</div>
-            <div style="font-size:13px;color:var(--muted)">${qty} × ${p.price} €</div>
+    ];
+
+    /* -------------------- RENDER PRODUCTS -------------------- */
+    const productsGrid = document.getElementById('productsGrid');
+
+    function renderProducts(){
+      productsGrid.innerHTML = '';
+      for(const p of products){
+        const card = document.createElement('article');
+        card.className = 'product';
+        card.setAttribute('data-id', p.id);
+        card.innerHTML = `
+          <div class="photo" aria-hidden="true">
+            <img src="${p.img}" alt="${escapeHtml(p.name)}">
           </div>
-          <div class="controls">
-            <button class="small-btn" onclick="changeQty('${id}', ${qty-1})">−</button>
-            <div style="min-width:24px;text-align:center;font-weight:700">${qty}</div>
-            <button class="small-btn" onclick="changeQty('${id}', ${qty+1})">+</button>
+          <h3>${escapeHtml(p.name)}</h3>
+          <div class="desc">${escapeHtml(p.short)}</div>
+          <div class="meta">
+            <div class="price">${p.price.toFixed(2)} €</div>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" data-action="view" data-id="${p.id}">Ver más</button>
+            <button class="btn primary" data-action="add" data-id="${p.id}">Añadir a la cesta</button>
           </div>
         `;
-        cartListEl.appendChild(div);
-      });
-      cartTotalEl.textContent = (total).toFixed(2) + ' €';
-      miniTotalEl.textContent = (total).toFixed(2) + ' €';
+        productsGrid.appendChild(card);
+      }
     }
 
-    function changeQty(id, qty){
-      if(qty <= 0) delete cart[id];
-      else cart[id] = qty;
-      renderCart();
+    // helper for safety (very tiny)
+    function escapeHtml(text){
+      return String(text).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
     }
 
-    function addToCart(id){
-      if(!cart[id]) cart[id]=0;
-      cart[id] += 1;
-      // micro animation
-      const card = document.querySelector('[data-id="'+id+'"]');
-      if(card) card.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}], {duration:220});
-      renderCart();
+    /* -------------------- CART STATE -------------------- */
+    let cart = {}; // { productId: qty }
+
+    function getCartCount(){
+      return Object.values(cart).reduce((s,q)=>s+q,0);
     }
 
-    // clear button
-    document.getElementById('clearBtn').addEventListener('click', ()=>{
+    function computeTotal(){
+      // all zeros plus potential delivery; computed at checkout
+      return Object.entries(cart).reduce((s,[id,q]) => {
+        const p = products.find(x=>x.id===id);
+        const price = p ? p.price : 0;
+        return s + price * q;
+      }, 0);
+    }
+
+    /* -------------------- UI ELEMENTS -------------------- */
+    const topCartCount = document.getElementById('topCartCount');
+    const miniTotal = document.getElementById('miniTotal');
+    const miniList = document.getElementById('miniList');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    /* -------------------- RENDER CART (inside panel and mini) -------------------- */
+    function renderCartUI(){
+      // update counters
+      topCartCount.textContent = getCartCount();
+      // mini summary on sidebar
+      const entries = Object.entries(cart);
+      if(entries.length === 0){
+        miniList.innerHTML = '<div style="color:var(--muted)">Añade algo a la cesta para empezar.</div>';
+      } else {
+        miniList.innerHTML = entries.map(([id,q]) => {
+          const p = products.find(x=>x.id===id);
+          return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="min-width:0"><strong style="display:block">${p.name}</strong><span style="color:var(--muted);font-size:13px">${q} × ${p.price.toFixed(2)} €</span></div><div style="font-weight:800;color:#b85d72">0.00 €</div></div>`;
+        }).join('');
+      }
+
+      // cart panel items
+      cartItemsEl.innerHTML = '';
+      if(entries.length === 0){
+        cartItemsEl.innerHTML = '<div style="color:var(--muted)">Tu cesta está vacía. Añade tus favoritos.</div>';
+      } else {
+        for(const [id,qty] of entries){
+          const p = products.find(x=>x.id===id);
+          const item = document.createElement('div');
+          item.className = 'cart-item';
+          item.innerHTML = `
+            <div style="display:flex;gap:10px;align-items:center;">
+              <div style="width:64px;height:48px;border-radius:8px;overflow:hidden;background:#faf0f3"><img src="${p.img}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+              <div class="info">
+                <div class="name">${escapeHtml(p.name)}</div>
+                <div class="small muted">${p.price.toFixed(2)} €</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+              <div class="qtyctrl">
+                <button class="small-btn" data-action="dec" data-id="${p.id}">−</button>
+                <div style="min-width:28px;text-align:center;font-weight:700">${qty}</div>
+                <button class="small-btn" data-action="inc" data-id="${p.id}">+</button>
+              </div>
+              <div style="color:#b85d72;font-weight:700">0.00 €</div>
+            </div>
+          `;
+          cartItemsEl.appendChild(item);
+        }
+      }
+
+      // totals (all zero) - show computed but prices are zero
+      const total = computeTotal();
+      cartTotalEl.textContent = total.toFixed(2) + ' €';
+      document.getElementById('miniTotal').textContent = total.toFixed(2) + ' €';
+    }
+
+    /* -------------------- CART OPERATIONS -------------------- */
+    function addToCart(productId, qty = 1){
+      if(!cart[productId]) cart[productId] = 0;
+      cart[productId] += qty;
+      renderCartUI();
+      // micro feedback
+      flashProduct(productId);
+    }
+
+    function changeQty(productId, newQty){
+      if(newQty <= 0) delete cart[productId];
+      else cart[productId] = newQty;
+      renderCartUI();
+    }
+
+    function clearCart(){
       cart = {};
-      renderCart();
+      renderCartUI();
+    }
+
+    function flashProduct(productId){
+      const el = document.querySelector(`[data-id="${productId}"]`);
+      if(!el) return;
+      el.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}], {duration:260, easing:'ease-out'});
+    }
+
+    /* -------------------- EVENT DELEGATION FOR PRODUCTS GRID -------------------- */
+    productsGrid.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if(action === 'add') addToCart(id);
+      if(action === 'view') openProductModal(id);
     });
 
-    // toggle cart: scroll to sidebar
-    function toggleCart(){
-      document.querySelector('.sidebar').scrollIntoView({behavior:'smooth', block:'center'});
-    }
+    /* -------------------- CART PANEL TOGGLING -------------------- */
+    const openCartTop = document.getElementById('openCartTop');
+    const closeCartPanel = document.getElementById('closeCartPanel');
 
-    // initial render
-    renderCart();
+    openCartTop.addEventListener('click', ()=>{
+      const open = cartPanel.classList.toggle('open');
+      openCartTop.setAttribute('aria-expanded', open ? 'true' : 'false');
+      // focus the panel for accessibility when opened
+      if(open) cartPanel.focus();
+    });
+    closeCartPanel.addEventListener('click', ()=> {
+      cartPanel.classList.remove('open');
+      openCartTop.setAttribute('aria-expanded', 'false');
+    });
 
-    /* ===== PRODUCT MODAL ===== */
+    /* -------------------- CART ITEM BUTTONS (inc/dec) -------------------- */
+    cartItemsEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if(action === 'dec') changeQty(id, (cart[id] || 0) - 1);
+      if(action === 'inc') changeQty(id, (cart[id] || 0) + 1);
+    });
+
+    /* Sidebar clear button */
+    document.getElementById('clearBtnSidebar').addEventListener('click', ()=>{
+      clearCart();
+    });
+    document.getElementById('clearCartBtn').addEventListener('click', ()=>{
+      clearCart();
+    });
+
+    /* Checkout triggers */
+    document.getElementById('openCheckoutBtn').addEventListener('click', openCheckoutForm);
+    document.getElementById('checkoutBtnSidebar').addEventListener('click', openCheckoutForm);
+    document.getElementById('checkoutBtnSidebar').addEventListener('click', ()=> { cartPanel.classList.remove('open'); });
+
+    /* -------------------- PRODUCT DETAIL MODAL LOGIC -------------------- */
     const productOverlay = document.getElementById('productOverlay');
-    const modalImg = document.getElementById('modalImg');
+    const modalImage = document.getElementById('modalImage');
     const modalTitle = document.getElementById('modalTitle');
     const modalShort = document.getElementById('modalShort');
     const modalLong = document.getElementById('modalLong');
     const modalIngredients = document.getElementById('modalIngredients');
     const modalAllergens = document.getElementById('modalAllergens');
-    const modalAddBtn = document.getElementById('modalAddBtn');
+    const modalAddBtnEl = document.getElementById('modalAddBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalCloseBtn2 = document.getElementById('modalCloseBtn2');
+
+    let currentModalProductId = null;
 
     function openProductModal(id){
-      const p = products[id];
-      modalImg.src = p.img;
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      currentModalProductId = id;
+      modalImage.src = p.img;
       modalTitle.textContent = p.name;
       modalShort.textContent = p.short;
       modalLong.textContent = p.long;
-      modalIngredients.textContent = p.ingredients || '—';
-      modalAllergens.textContent = p.allergens || '—';
-      modalAddBtn.onclick = ()=>{ addToCart(id); closeProductModal(); };
+      modalIngredients.textContent = p.ingredients;
+      modalAllergens.textContent = p.allergens;
       productOverlay.classList.add('active');
+      productOverlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      // attach add handler
+      modalAddBtnEl.onclick = ()=>{ addToCart(id); closeProductModal(); };
     }
+
     function closeProductModal(){
       productOverlay.classList.remove('active');
+      productOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      currentModalProductId = null;
+    }
+
+    modalCloseBtn.addEventListener('click', closeProductModal);
+    modalCloseBtn2.addEventListener('click', closeProductModal);
+
+    productOverlay.addEventListener('click', (e)=>{
+      if(e.target === productOverlay) closeProductModal();
+    });
+
+    /* -------------------- CHECKOUT FORM LOGIC -------------------- */
+    const checkoutOverlay = document.getElementById('checkoutOverlay');
+    const deliveryType = document.getElementById('deliveryType');
+    const addressBlock = document.getElementById('addressBlock');
+    const closeCheckoutBtn = document.getElementById('closeCheckoutBtn');
+    const confirmCheckoutBtn = document.getElementById('confirmCheckoutBtn');
+
+    function openCheckoutForm(){
+      if(Object.keys(cart).length === 0){
+        alert('Tu cesta está vacía. Añade algo antes de hacer un pedido.');
+        return;
+      }
+      // render checkout items on right column
+      renderCheckoutSummary();
+      checkoutOverlay.classList.add('active');
+      checkoutOverlay.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCheckout(){
+      checkoutOverlay.classList.remove('active');
+      checkoutOverlay.setAttribute('aria-hidden','true');
       document.body.style.overflow = '';
     }
-    function overlayClick(e){
-      if(e.target === productOverlay || e.target === checkoutOverlay) {
-        closeProductModal();
-        closeCheckout();
-      }
-    }
+    closeCheckoutBtn.addEventListener('click', closeCheckout);
 
-    /* ===== CHECKOUT FORM LOGIC ===== */
-    const checkoutOverlay = document.getElementById('checkoutOverlay');
-    const deliverySelect = document.getElementById('deliverySelect');
-    const addressBlock = document.getElementById('addressBlock');
-
-    deliverySelect.addEventListener('change', (e)=>{
+    // address spawn animation
+    deliveryType.addEventListener('change', (e)=>{
       if(e.target.value === 'delivery'){
-        // open address with animation
         addressBlock.classList.add('open');
+        addressBlock.setAttribute('aria-hidden','false');
       } else {
         addressBlock.classList.remove('open');
+        addressBlock.setAttribute('aria-hidden','true');
       }
     });
 
-    function openCheckoutForm(){
-      // require at least 1 item
-      if(Object.keys(cart).length === 0){ alert('Tu cesta está vacía. Añade algo antes de hacer un pedido.'); return; }
-      checkoutOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeCheckout(){
-      checkoutOverlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    function buildOrderText(){
-      const name = document.getElementById('custName').value.trim() || '[Nombre]';
-      const method = document.getElementById('deliverySelect').value;
-      const address = document.getElementById('addressField').value.trim() || (method==='delivery' ? '[Dirección]' : 'Olalde Kalea');
-      const email = document.getElementById('emailField').value.trim() || '[email]';
-      const phone = document.getElementById('phoneField').value.trim() || '[tel]';
-      const note = document.getElementById('noteField').value.trim() || '';
-      const discount = document.getElementById('discountField').value.trim() || '';
-
+    function renderCheckoutSummary(){
+      const container = document.getElementById('checkoutItems');
+      container.innerHTML = '';
       const entries = Object.entries(cart);
-      let lines = [];
-      if(entries.length===0) lines.push('--- SIN ITEMS EN LA CESTA ---');
+      if(entries.length===0){
+        container.innerHTML = '<div style="color:var(--muted)">No hay items.</div>';
+      } else {
+        for(const [id, qty] of entries){
+          const p = products.find(x=>x.id===id);
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.style.alignItems = 'center';
+          row.style.gap = '10px';
+          row.innerHTML = `<div style="min-width:0"><div style="font-weight:700">${escapeHtml(p.name)}</div><div style="color:var(--muted);font-size:13px">${qty} × ${p.price.toFixed(2)} €</div></div><div style="font-weight:700;color:#b85d72">0.00 €</div>`;
+          container.appendChild(row);
+        }
+      }
+      document.getElementById('checkoutMiniTotal').textContent = computeTotal().toFixed(2) + ' €';
+    }
+
+    /* -------------------- CONFIRM CHECKOUT: VALIDATIONS + COPY + REDIRECT -------------------- */
+    confirmCheckoutBtn.addEventListener('click', async ()=> {
+      // validations:
+      const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('emailField').value.trim();
+      const phone = document.getElementById('phoneField').value.trim();
+      const method = deliveryType.value;
+      const address = document.getElementById('addressField').value.trim();
+      const note = document.getElementById('noteField').value.trim();
+      const discount = document.getElementById('discountField').value.trim();
+
+      if(!name){ alert('Por favor indica tu nombre.'); document.getElementById('custName').focus(); return; }
+      if(!validateEmail(email)){ alert('Por favor indica un correo válido.'); document.getElementById('emailField').focus(); return; }
+      if(!phone){ alert('Por favor indica un teléfono.'); document.getElementById('phoneField').focus(); return; }
+      if(method === 'delivery' && !address){ alert('Has seleccionado envío a domicilio; por favor indica la dirección.'); document.getElementById('addressField').focus(); return; }
+
+      // build order text
+      const entries = Object.entries(cart);
+      let itemsText = '';
+      if(entries.length === 0) itemsText = '--- SIN ITEMS EN LA CESTA ---';
       else {
-        lines.push('Pedido:');
-        entries.forEach(([id,qty])=>{
-          const p = products[id];
-          lines.push(`- ${p.name} x${qty} (precio: ${p.price} €)`);
-        });
+        itemsText = entries.map(([id,q]) => {
+          const p = products.find(x=>x.id===id);
+          return `- ${p.name} x${q} (precio: ${p.price.toFixed(2)} €)`;
+        }).join('\n');
       }
 
       const deliveryCharge = (method === 'delivery') ? 3.00 : 0.00;
-      const subtotal = 0.00;
+      const subtotal = computeTotal();
       const total = (subtotal + deliveryCharge).toFixed(2);
 
-      const text = `SWEET SABORIUM - Pedido automático
+      const orderText = `SWEET SABORIUM - Pedido automático
 
 Nombre: ${name}
 Recogida/Envío: ${method === 'pickup' ? 'Recoger en Olalde Kalea' : 'Envío a domicilio (+3.00€)'}
-Dirección: ${address}
+Dirección: ${method === 'delivery' ? address : 'Olalde Kalea'}
 Email: ${email}
 Teléfono: ${phone}
 
-${lines.join('\n')}
+Productos:
+${itemsText}
 
 Nota cliente: ${note}
 Código descuento: ${discount}
@@ -621,74 +1116,140 @@ Subtotal: ${subtotal.toFixed(2)} €
 Gastos envío: ${deliveryCharge.toFixed(2)} €
 TOTAL: ${total} €
 
-Métodos de pago: efectivo por adelantado o Bizum al 644677582
+Métodos de pago únicos aceptados: Efectivo con antelación o Bizum al 644677582
 
 (Se recomienda pegar este texto en el formulario de Google Forms con CTRL+V / pegar)
 `;
-      return text;
-    }
 
-    async function checkout(){
-      // VALIDATIONS
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('emailField').value.trim();
-      const phone = document.getElementById('phoneField').value.trim();
-      const method = document.getElementById('deliverySelect').value;
-      const address = document.getElementById('addressField').value.trim();
-
-      if(!name){ alert('Por favor indica tu nombre.'); document.getElementById('custName').focus(); return; }
-      if(!email || !validateEmail(email)){ alert('Por favor indica un correo electrónico válido.'); document.getElementById('emailField').focus(); return; }
-      if(!phone){ alert('Por favor indica un número de teléfono.'); document.getElementById('phoneField').focus(); return; }
-      if(method === 'delivery' && !address){ alert('Has seleccionado envío a domicilio; por favor indica la dirección.'); document.getElementById('addressField').focus(); return; }
-
-      const orderText = buildOrderText();
       try {
         await navigator.clipboard.writeText(orderText);
-        // small success feedback
+        // visual feedback: small toast-like behavior (simple alert for compatibility)
         alert('Tu pedido se ha copiado al portapapeles. Serás redirigido al formulario de pedido.');
-      } catch(e){
-        // fallback
+      } catch (err) {
+        // fallback for older browsers
         prompt('No se pudo copiar automáticamente. Selecciona y copia este texto (Ctrl+C):', orderText);
       }
 
-      // replace this with your Google Form URL
+      // Replace with your Google Forms URL in production
       const googleFormURL = 'https://forms.gle/your-google-form-id';
 
-      // Redirect after 1 second
+      // redirect after small delay
       setTimeout(()=> { window.location.href = googleFormURL; }, 1000);
-    }
+    });
 
+    /* -------------------- UTIL: EMAIL VALIDATION -------------------- */
     function validateEmail(email){
-      // simple regex
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    /* ===== OPEN COVER -> ENTER ===== */
-    document.getElementById('enterBtn').addEventListener('click', ()=>{
-      // fade out cover and show main
-      const cover = document.getElementById('cover');
-      cover.style.transition = 'opacity .6s ease, transform .6s ease';
-      cover.style.opacity = '0';
-      cover.style.transform = 'translateY(-12px)';
-      setTimeout(()=> { cover.style.display = 'none'; document.getElementById('mainContent').style.opacity='1'; document.getElementById('mainContent').style.transform='translateY(0)'; window.scrollTo({top:0,behavior:'smooth'}); }, 650);
-    });
-
-    // small utility: attach openProduct modal for each 'Ver más' button based on data-id
-    document.querySelectorAll('[data-id]').forEach(el=>{
-      const id = el.getAttribute('data-id');
-      // attach the buttons already have onclicks; nothing else needed
-    });
-
-    // Close overlays when pressing Escape
+    /* -------------------- PRODUCT MODAL: keyboard & escape handling -------------------- */
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Escape'){
-        closeProductModal();
-        closeCheckout();
+        if(productOverlay.classList.contains('active')) closeProductModal();
+        if(checkoutOverlay.classList.contains('active')) closeCheckout();
       }
     });
 
-    // Ensure address block initial state
-    if(deliverySelect.value === 'delivery') addressBlock.classList.add('open');
+    /* -------------------- INITIAL RENDER & UX TOUCHES -------------------- */
+    renderProducts();
+    renderCartUI();
+
+    // attach handlers for global elements (open the cart panel when clicking top button)
+    document.getElementById('openCartTop').addEventListener('click', ()=>{
+      cartPanel.classList.add('open');
+      document.getElementById('openCartTop').setAttribute('aria-expanded', 'true');
+    });
+
+    // Allow clicking "Hacer pedido" in sidebar to open form
+    document.getElementById('checkoutBtnSidebar').addEventListener('click', ()=>{
+      cartPanel.classList.remove('open');
+    });
+
+    // Provide click delegation for modal action elements already set up
+    // (some handlers are wired above)
+
+    /* -------------------- SMALL ACCESSIBILITY & POLISH -------------------- */
+    // Make sure address block respects initial delivery selection
+    (function initAddressBlock(){
+      if(deliveryType.value === 'delivery'){
+        addressBlock.classList.add('open');
+        addressBlock.setAttribute('aria-hidden','false');
+      } else {
+        addressBlock.classList.remove('open');
+        addressBlock.setAttribute('aria-hidden','true');
+      }
+    })();
+
+    /* -------------------- OPTIONAL: Surprise / Request functionality -------------------- */
+    // The user asked earlier for an option "Sorpréndeme / Escribe tu deseo".
+    // We'll include it as a special card at the end; adding to cart will add a "Sorpresa" item,
+    // and the special "request" action can simply open the checkout form with a suggestion to write their wish in the note.
+    function addSurprise(){
+      // pick random among available products (excluding surprise itself)
+      const candidates = products.filter(p => p.id !== 'p_surprise').slice(0,5); // top 5 by default
+      const pick = candidates[Math.floor(Math.random()*candidates.length)];
+      addToCart(pick.id);
+      alert(`Te hemos añadido: ${pick.name} (opción "Sorpréndeme"). Puedes añadir más o finalizar el pedido.`);
+    }
+
+    function openRequestNote(){
+      // open checkout and prefill note encouraging the user
+      openCheckoutForm();
+      setTimeout(()=> {
+        const noteField = document.getElementById('noteField');
+        noteField.value = 'Solicitud personalizada: ';// allow user to continue typing
+        noteField.focus();
+      }, 220);
+    }
+
+    /* -------------------- Populate a "Sorpréndeme" card + ensure grid fullness --------------- */
+    // Add a card for "Sorpréndeme / Escribe tu deseo" as last product
+    products.push({
+      id: 'p_surprise',
+      name: 'Sorpréndeme / Escribe tu deseo',
+      short: 'Si no encuentras lo que quieres, pídelo: sorpréndeme o escribe tu deseo en la nota.',
+      long: 'Elige la opción Sorpréndeme para que seleccionemos un artículo por ti (entre nuestros productos destacados). O escribe tu deseo y estudiaremos la petición.',
+      ingredients: '',
+      allergens: '',
+      price: 0.00,
+      img: 'https://images.unsplash.com/photo-1605902711622-cfb43c44367f?auto=format&fit=crop&w=1200&q=80'
+    });
+    // re-render to include surprise
+    renderProducts();
+
+    // attach special handlers for surprise card buttons after render (delegation covers "data-action")
+    // but we want custom behaviors for p_surprise add/view
+    productsGrid.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const id = btn.getAttribute('data-id');
+      if(id === 'p_surprise'){
+        const action = btn.getAttribute('data-action');
+        if(action === 'add'){ addSurprise(); }
+        if(action === 'view'){ openProductModal('p_surprise'); modalAddBtnEl.onclick = ()=>{ addSurprise(); closeProductModal(); }; }
+      }
+    });
+
+    /* -------------------- SMALL POLISH: cover ENTER TRANSITION (from earlier flows) --------------- */
+    // The user previously asked for a cover. We removed the full-screen cover but we keep a soft nav:
+    // Scroll to top when page loads to show the top info and header cleanly.
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    /* -------------------- FINAL: Ensure all elements have fallback handlers --------------- */
+    // Close cart when clicking outside (on small screens)
+    document.addEventListener('click', (e)=>{
+      // if click outside panel and not on the open button, close panel
+      const insidePanel = e.target.closest('#cartPanel');
+      const clickedOpenBtn = e.target.closest('#openCartTop');
+      if(!insidePanel && !clickedOpenBtn && cartPanel.classList.contains('open')){
+        cartPanel.classList.remove('open');
+        document.getElementById('openCartTop').setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* -------------------- DEBUG helpers (comment out in production) -------------------- */
+    // console.log('Products loaded:', products.length);
+    // console.log('Saborium page ready.');
 
   </script>
 </body>
