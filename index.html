@@ -1,71 +1,212 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>saborium.</title>
+
+  <!-- Fuente moderna y elegante para texto -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
+    /* ======= FUENTE DEL LOGO ======= */
     @font-face {
-      font-family: 'BogartTrial';
-      src: url('./fuente_saborium.ttf') format('truetype');
+      font-family: "BogartTrial";
+      src: url("fuente_saborium.ttf") format("truetype");
       font-weight: 900;
       font-style: italic;
       font-display: swap;
     }
 
-    :root{
-      --bg: #000;
-      --gold: #d4af37;
-      --muted: #bfbfbf;
+    /* ======= RESET Y BASE ======= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;width:100%;font-family:Poppins, sans-serif;background:var(--bg);color:#fff;overflow:hidden;}
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      color: #fff;
+      font-family: "Montserrat", sans-serif;
+      letter-spacing: 0.3px;
+    }
 
-    canvas#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at bottom,#0b0b0b 0%,#000 100%);}
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle at bottom, #0b0b0b 0%, #000 100%);
+    }
 
-    .wrap{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+    /* ======= CONTENEDOR CENTRAL ======= */
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 40px;
+    }
 
-    .logo{font-family:'BogartTrial',serif;font-style:italic;font-weight:900;font-size:84px;line-height:0.9;text-transform:lowercase;letter-spacing:3px;background:linear-gradient(90deg,var(--gold),#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:logoShine 8s linear infinite;}
+    .glass-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 60px 80px;
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+      backdrop-filter: blur(12px);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
 
-    @keyframes logoShine{0%{background-position:200% 0}100%{background-position:0 0}}
+    .glass-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+    }
 
-    .sub{margin-top:10px;font-size:18px;color:var(--muted);max-width:700px;}
+    h1 {
+      font-family: "BogartTrial", serif;
+      font-size: 5em;
+      font-style: italic;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      background: linear-gradient(90deg, #d4af37, #ffffff, #d4af37);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 6s linear infinite;
+    }
 
-    .hero-actions{display:flex;gap:30px;margin-top:50px;}
+    p {
+      margin-top: 25px;
+      font-size: 1.1em;
+      max-width: 650px;
+      color: #e6e6e6;
+      opacity: 0.95;
+      line-height: 1.7em;
+      font-weight: 400;
+    }
 
-    .btn{position:relative;padding:15px 35px;border-radius:50px;border:2px solid var(--gold);background:transparent;color:var(--gold);font-size:1.1em;cursor:pointer;overflow:hidden;transition:all .4s ease;}
+    .buttons {
+      margin-top: 50px;
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+    }
 
-    .btn:hover{background:var(--gold);color:#000;box-shadow:0 0 15px var(--gold);transform:scale(1.05);}
+    .btn {
+      padding: 15px 40px;
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      background: transparent;
+      font-size: 1.05em;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+    }
 
-    footer{position:absolute;bottom:15px;width:100%;text-align:center;font-size:0.9em;color:#aaa;letter-spacing:1px;z-index:2;}
-    footer span{color:var(--gold);}
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(212,175,55,0.3), rgba(255,255,255,0.2));
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      background-color: #d4af37;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #d4af37;
+    }
+
+    /* ======= FOOTER ======= */
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 0.9em;
+      color: #aaa;
+      letter-spacing: 1px;
+      z-index: 2;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    footer span {
+      color: #d4af37;
+    }
+
+    .version {
+      margin-top: 4px;
+      font-size: 0.8em;
+      color: #777;
+    }
+
+    /* ======= ANIMACIONES ======= */
+    @keyframes shine {
+      0% { background-position: 200% center; }
+      100% { background-position: 0% center; }
+    }
   </style>
 </head>
 <body>
   <canvas id="bg"></canvas>
 
-  <div class="wrap">
-    <h1 class="logo">saborium.</h1>
-    <p class="sub">Una experiencia sensorial que fusiona la alta cocina con la dulzura artesanal.</p>
-    <div class="hero-actions">
-      <button class="btn" onclick="window.location.href='sweetsaborium.html'">🍰 Sweet Saborium</button>
-      <button class="btn" onclick="window.location.href='saboriumgourmet.html'">🍷 Saborium Gourmet</button>
+  <div class="container">
+    <div class="glass-box">
+      <h1>saborium.</h1>
+      <p>Una experiencia sensorial que fusiona la alta cocina con la dulzura artesanal.</p>
+      <div class="buttons">
+        <button class="btn" onclick="window.location.href='sweetsaborium.html'">🍰 Sweet Saborium</button>
+        <button class="btn" onclick="window.location.href='saboriumgourmet.html'">🍷 Saborium Gourmet</button>
+      </div>
     </div>
   </div>
 
-  <footer>© 2025 <span>saborium.</span> | Todos los derechos reservados.</footer>
+  <footer>
+    © 2025 <span>saborium.</span> | Todos los derechos reservados.<br>
+    <div class="version">Versión 1.000</div>
+  </footer>
 
   <script>
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
+    /* ======= ANIMACIÓN DE PARTÍCULAS DORADAS LENTAS ======= */
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+
     let w, h, particles = [];
 
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resize);
+
+    window.addEventListener("resize", resize);
     resize();
 
     class Particle {
@@ -74,9 +215,9 @@
         this.x = Math.random() * w;
         this.y = Math.random() * h;
         this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.2; // más lento
-        this.speedY = (Math.random() - 0.5) * 0.2; // más lento
-        this.alpha = 0.2 + Math.random() * 0.8;
+        this.speedX = (Math.random() - 0.5) * 0.15;
+        this.speedY = (Math.random() - 0.5) * 0.15;
+        this.alpha = 0.3 + Math.random() * 0.7;
       }
       update() {
         this.x += this.speedX;
@@ -87,7 +228,7 @@
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(212,175,55,${this.alpha})`;
-        ctx.shadowColor = '#d4af37';
+        ctx.shadowColor = "#d4af37";
         ctx.shadowBlur = 10;
         ctx.fill();
       }
