@@ -723,4 +723,506 @@
     <div style="font-weight:800;color:var(--dark)">Saborium Gourmet by Saborium.</div>
     <div style="margin-top:6px;color:var(--muted);font-size:13px">© 2025 Todos los derechos reservados.</div>
     <div class="legal" style="margin-top:8px;">
-      <a href
+      <a href="#" style="color:var(--gold-2)">Condiciones de servicio</a> · <a href="#" style="color:var(--gold-2)">Política de privacidad</a>
+    </div>
+  </footer>
+
+  <script>
+    /**************************************************************************
+     * Saborium Gourmet - Client logic
+     * 9 productos gourmet (incluye Sorpresa y Elígelo tú)
+     **************************************************************************/
+
+    /* -------------------- PRODUCTS DATA (9 productos gourmet) -------------------- */
+    const products = [
+      {
+        id: 'p1',
+        name: 'Paté de Foie Artesanal',
+        short: 'Paté de hígado de pato con trufa negra y coñac.',
+        long: 'Elaborado siguiendo métodos tradicionales franceses, nuestro paté combina hígado de pato de primera calidad con trufa negra de Teruel y un toque de coñac añejo. Textura sedosa y sabor profundo.',
+        ingredients: 'Hígado de pato, trufa negra, coñac, mantequilla, especias.',
+        allergens: 'Contiene: lácteos, alcohol.',
+        price: 18.50,
+        img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p2',
+        name: 'Aceite de Oliva Virgen Extra',
+        short: 'AOVE de variedad arbequina, primera prensada en frío.',
+        long: 'Aceite de oliva virgen extra procedente de olivares centenarios. Prensado en frío para preservar todas sus propiedades organolépticas. Sabor afrutado con toques de almendra.',
+        ingredients: 'Aceitunas arbequina 100%.',
+        allergens: 'Sin alérgenos.',
+        price: 12.90,
+        img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p3',
+        name: 'Queso Manchego Curado',
+        short: 'Queso manchego D.O.P. con 12 meses de curación.',
+        long: 'Elaborado con leche cruda de oveja manchega, este queso ha sido curado durante 12 meses en condiciones óptimas. Textura firme y sabor intenso con matices dulces.',
+        ingredients: 'Leche cruda de oveja, sal, cuajo, fermentos lácticos.',
+        allergens: 'Contiene: lácteos.',
+        price: 24.80,
+        img: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p4',
+        name: 'Jamón Ibérico de Bellota',
+        short: 'Jamón ibérico 100% bellota con D.O. Guijuelo.',
+        long: 'Pieza de jamón ibérico de cerdos criados en libertad alimentados exclusivamente con bellotas. Curación mínima de 36 meses. Sabor único, intenso y persistente.',
+        ingredients: 'Jamón de cerdo ibérico, sal marina.',
+        allergens: 'Sin alérgenos declarados.',
+        price: 89.00,
+        img: 'https://images.unsplash.com/photo-1606908628397-d84fbd29ab89?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p5',
+        name: 'Caviar de Esturión',
+        short: 'Caviar imperial de esturión ruso, lata de 50g.',
+        long: 'Huevas de esturión seleccionadas, saladas con método tradicional Malossol. Color dorado intenso, textura cremosa y sabor delicado con toques marinos.',
+        ingredients: 'Huevas de esturión, sal.',
+        allergens: 'Contiene: pescado.',
+        price: 125.00,
+        img: 'https://images.unsplash.com/photo-1535473895227-bdecb20fb157?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p6',
+        name: 'Sal de Escamas Maldon',
+        short: 'Sal marina en escamas de Essex, Inglaterra.',
+        long: 'Sal marina obtenida mediante evaporación lenta de agua del estuario de Blackwater. Cristales piramidales únicos, textura crujiente y sabor puro sin amargor.',
+        ingredients: 'Sal marina.',
+        allergens: 'Sin alérgenos.',
+        price: 8.50,
+        img: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p7',
+        name: 'Vinagre Balsámico de Módena',
+        short: 'Aceto Balsamico Tradizionale di Modena DOP, 25 años.',
+        long: 'Vinagre balsámico tradicional envejecido durante 25 años en barricas de diferentes maderas. Densidad perfecta, acidez equilibrada y complejidad aromática excepcional.',
+        ingredients: 'Mosto de uva cocido.',
+        allergens: 'Contiene: sulfitos.',
+        price: 45.00,
+        img: 'https://images.unsplash.com/photo-1474943997877-1a93ca1b26fd?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p_elige',
+        name: 'Elígelo tú',
+        short: 'Dinos en la nota qué producto gourmet buscas y lo conseguiremos.',
+        long: 'Elige esta opción si tienes una petición específica: indica en la nota el producto que buscas (por ejemplo: "Foie micuit de oca 200g" o "Trufa blanca de Alba 30g"). Haremos todo lo posible por conseguirlo.',
+        ingredients: '',
+        allergens: '',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 'p_surprise',
+        name: 'Sorpresa Gourmet',
+        short: '¿No sabes qué elegir? Déjate sorprender por nuestra selección.',
+        long: 'Seleccionaremos uno de nuestros productos estrella para ti. Si tienes preferencias, especifícalas en la nota al finalizar.',
+        ingredients: '',
+        allergens: '',
+        price: 0.00,
+        img: 'https://images.unsplash.com/photo-1481487196290-c152efe083f5?auto=format&fit=crop&w=1200&q=80'
+      }
+    ];
+
+    /* -------------------- RENDER PRODUCTS -------------------- */
+    const productsGrid = document.getElementById('productsGrid');
+
+    function renderProducts(){
+      productsGrid.innerHTML = '';
+      for(const p of products){
+        const card = document.createElement('article');
+        card.className = 'product';
+        card.setAttribute('data-id', p.id);
+        card.innerHTML = `
+          <div class="photo" aria-hidden="true">
+            <img src="${p.img}" alt="${escapeHtml(p.name)}">
+          </div>
+          <h3>${escapeHtml(p.name)}</h3>
+          <div class="desc">${escapeHtml(p.short)}</div>
+          <div class="meta">
+            <div class="price">${p.price.toFixed(2)} €</div>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" data-action="view" data-id="${p.id}">Ver más</button>
+            <button class="btn primary" data-action="add" data-id="${p.id}">Añadir a la cesta</button>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      }
+    }
+
+    function escapeHtml(text){
+      return String(text || '').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
+    }
+
+    /* -------------------- CART STATE -------------------- */
+    let cart = {};
+
+    function getCartCount(){
+      return Object.values(cart).reduce((s,q)=>s+q,0);
+    }
+
+    function computeSubtotal(){
+      return Object.entries(cart).reduce((s,[id,q]) => {
+        const p = products.find(x=>x.id===id);
+        const price = p ? p.price : 0;
+        return s + price * q;
+      }, 0);
+    }
+
+    /* -------------------- UI ELEMENTS -------------------- */
+    const topCartCount = document.getElementById('topCartCount');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    /* -------------------- RENDER CART -------------------- */
+    function renderCartUI(){
+      topCartCount.textContent = getCartCount();
+
+      cartItemsEl.innerHTML = '';
+      const entries = Object.entries(cart);
+      if(entries.length === 0){
+        cartItemsEl.innerHTML = '<div style="color:var(--muted)">Tu cesta está vacía. Añade tus favoritos.</div>';
+      } else {
+        for(const [id,qty] of entries){
+          const p = products.find(x=>x.id===id);
+          const item = document.createElement('div');
+          item.className = 'cart-item';
+          item.innerHTML = `
+            <div style="display:flex;gap:10px;align-items:center;">
+              <div style="width:64px;height:48px;border-radius:8px;overflow:hidden;background:var(--cream-2)"><img src="${p.img}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+              <div class="info">
+                <div class="name">${escapeHtml(p.name)}</div>
+                <div class="small muted">${p.price.toFixed(2)} €</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+              <div class="qtyctrl">
+                <button class="small-btn" data-action="dec" data-id="${p.id}">−</button>
+                <div style="min-width:28px;text-align:center;font-weight:700">${qty}</div>
+                <button class="small-btn" data-action="inc" data-id="${p.id}">+</button>
+              </div>
+              <div style="color:var(--gold-2);font-weight:700">${(p.price * qty).toFixed(2)} €</div>
+            </div>
+          `;
+          cartItemsEl.appendChild(item);
+        }
+      }
+
+      const subtotal = computeSubtotal();
+      cartTotalEl.textContent = subtotal.toFixed(2) + ' €';
+    }
+
+    /* -------------------- CART OPERATIONS -------------------- */
+    function addToCart(productId, qty = 1){
+      if(!cart[productId]) cart[productId] = 0;
+      cart[productId] += qty;
+      renderCartUI();
+      flashProduct(productId);
+    }
+
+    function changeQty(productId, newQty){
+      if(newQty <= 0) delete cart[productId];
+      else cart[productId] = newQty;
+      renderCartUI();
+    }
+
+    function clearCart(){
+      cart = {};
+      renderCartUI();
+    }
+
+    function flashProduct(productId){
+      const el = document.querySelector(`[data-id="${productId}"]`);
+      if(!el) return;
+      el.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}], {duration:260, easing:'ease-out'});
+    }
+
+    /* -------------------- EVENT DELEGATION -------------------- */
+    productsGrid.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if(action === 'add') {
+        if(id === 'p_surprise'){
+          addSurprise();
+        } else if(id === 'p_elige'){
+          if(!cart[id]) cart[id]=0;
+          cart[id] += 1;
+          alert('Has añadido "Elígelo tú". Especifica en la nota lo que buscas.');
+          renderCartUI();
+        } else addToCart(id);
+      }
+      if(action === 'view') openProductModal(id);
+    });
+
+    /* -------------------- CART PANEL TOGGLING -------------------- */
+    const openCartTop = document.getElementById('openCartTop');
+    const closeCartPanel = document.getElementById('closeCartPanel');
+
+    openCartTop.addEventListener('click', ()=>{
+      const open = cartPanel.classList.toggle('open');
+      openCartTop.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open) cartPanel.focus();
+    });
+    closeCartPanel.addEventListener('click', ()=> {
+      cartPanel.classList.remove('open');
+      openCartTop.setAttribute('aria-expanded', 'false');
+    });
+
+    cartItemsEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      e.stopPropagation();
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if(action === 'dec') changeQty(id, (cart[id] || 0) - 1);
+      if(action === 'inc') changeQty(id, (cart[id] || 0) + 1);
+    });
+
+    document.getElementById('clearCartBtn').addEventListener('click', ()=>{
+      clearCart();
+    });
+
+    document.getElementById('openCheckoutBtn').addEventListener('click', openCheckoutForm);
+
+    /* -------------------- PRODUCT DETAIL MODAL -------------------- */
+    const productOverlay = document.getElementById('productOverlay');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalShort = document.getElementById('modalShort');
+    const modalLong = document.getElementById('modalLong');
+    const modalIngredients = document.getElementById('modalIngredients');
+    const modalAllergens = document.getElementById('modalAllergens');
+    const modalAddBtnEl = document.getElementById('modalAddBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalCloseBtn2 = document.getElementById('modalCloseBtn2');
+
+    let currentModalProductId = null;
+
+    function openProductModal(id){
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      currentModalProductId = id;
+      modalImage.src = p.img;
+      modalTitle.textContent = p.name;
+      modalShort.textContent = p.short;
+      modalLong.textContent = p.long;
+      modalIngredients.textContent = p.ingredients || '-';
+      modalAllergens.textContent = p.allergens || '-';
+      productOverlay.classList.add('active');
+      productOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      modalAddBtnEl.onclick = ()=> {
+        if(id === 'p_surprise') { addSurprise(); }
+        else if(id === 'p_elige') {
+          if(!cart[id]) cart[id] = 0;
+          cart[id] += 1;
+          alert('Has añadido "Elígelo tú". No olvides detallar lo que buscas en la nota.');
+          renderCartUI();
+        } else addToCart(id);
+        closeProductModal();
+      };
+    }
+
+    function closeProductModal(){
+      productOverlay.classList.remove('active');
+      productOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      currentModalProductId = null;
+    }
+
+    modalCloseBtn.addEventListener('click', closeProductModal);
+    modalCloseBtn2.addEventListener('click', closeProductModal);
+
+    productOverlay.addEventListener('click', (e)=>{
+      if(e.target === productOverlay) closeProductModal();
+    });
+
+    /* -------------------- CHECKOUT FORM -------------------- */
+    const checkoutOverlay = document.getElementById('checkoutOverlay');
+    const deliveryType = document.getElementById('deliveryType');
+    const addressBlock = document.getElementById('addressBlock');
+    const closeCheckoutBtn = document.getElementById('closeCheckoutBtn');
+    const confirmCheckoutBtn = document.getElementById('confirmCheckoutBtn');
+    const giftToggle = document.getElementById('giftToggle');
+
+    function openCheckoutForm(){
+      if(Object.keys(cart).length === 0){
+        alert('Tu cesta está vacía. Añade algo antes de hacer un pedido.');
+        return;
+      }
+      renderCheckoutSummary();
+      checkoutOverlay.classList.add('active');
+      checkoutOverlay.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCheckout(){
+      checkoutOverlay.classList.remove('active');
+      checkoutOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    closeCheckoutBtn.addEventListener('click', closeCheckout);
+
+    deliveryType.addEventListener('change', (e)=>{
+      if(e.target.value === 'delivery'){
+        addressBlock.classList.add('open');
+        addressBlock.setAttribute('aria-hidden','false');
+      } else {
+        addressBlock.classList.remove('open');
+        addressBlock.setAttribute('aria-hidden','true');
+      }
+    });
+
+    function renderCheckoutSummary(){
+      const container = document.getElementById('checkoutItems');
+      container.innerHTML = '';
+      const entries = Object.entries(cart);
+      if(entries.length===0){
+        container.innerHTML = '<div style="color:var(--muted)">No hay items.</div>';
+      } else {
+        for(const [id, qty] of entries){
+          const p = products.find(x=>x.id===id);
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.style.alignItems = 'center';
+          row.style.gap = '10px';
+          row.innerHTML = `<div style="min-width:0"><div style="font-weight:700">${escapeHtml(p.name)}</div><div style="color:var(--muted);font-size:13px">${qty} × ${p.price.toFixed(2)} €</div></div><div style="font-weight:700;color:var(--gold-2)">${(p.price * qty).toFixed(2)} €</div>`;
+          container.appendChild(row);
+        }
+      }
+      const subtotal = computeSubtotal();
+      const deliveryCharge = (deliveryType.value === 'delivery') ? 3.00 : 0.00;
+      const giftCharge = giftToggle.checked ? 4.00 : 0.00;
+      const total = (subtotal + deliveryCharge + giftCharge).toFixed(2);
+      document.getElementById('checkoutMiniTotal').textContent = total + ' €';
+    }
+
+    giftToggle.addEventListener('change', ()=> {
+      renderCheckoutSummary();
+    });
+
+    /* -------------------- CONFIRM CHECKOUT -------------------- */
+    confirmCheckoutBtn.addEventListener('click', async ()=> {
+      const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('emailField').value.trim();
+      const phone = document.getElementById('phoneField').value.trim();
+      const method = deliveryType.value;
+      const address = document.getElementById('addressField').value.trim();
+      const note = document.getElementById('noteField').value.trim();
+      const discount = document.getElementById('discountField').value.trim();
+      const gift = giftToggle.checked;
+
+      if(!name){ alert('Por favor indica tu nombre.'); document.getElementById('custName').focus(); return; }
+      if(!validateEmail(email)){ alert('Por favor indica un correo válido.'); document.getElementById('emailField').focus(); return; }
+      if(!phone){ alert('Por favor indica un teléfono.'); document.getElementById('phoneField').focus(); return; }
+      if(method === 'delivery' && !address){ alert('Has seleccionado envío a domicilio; por favor indica la dirección.'); document.getElementById('addressField').focus(); return; }
+
+      const entries = Object.entries(cart);
+      let itemsText = '';
+      if(entries.length === 0) itemsText = '--- SIN ITEMS EN LA CESTA ---';
+      else {
+        itemsText = entries.map(([id,q]) => {
+          const p = products.find(x=>x.id===id);
+          return `- ${p.name} x${q} (precio unitario: ${p.price.toFixed(2)} €)`;
+        }).join('\n');
+      }
+
+      const deliveryCharge = (method === 'delivery') ? 3.00 : 0.00;
+      const subtotal = computeSubtotal();
+      const giftCharge = gift ? 4.00 : 0.00;
+      const total = (subtotal + deliveryCharge + giftCharge).toFixed(2);
+
+      const orderText = `SABORIUM GOURMET - Pedido automático
+
+Nombre: ${name}
+Recogida/Envío: ${method === 'pickup' ? 'Recoger en Olalde Kalea' : 'Envío a domicilio (+3.00€)'}
+Dirección: ${method === 'delivery' ? address : 'Olalde Kalea'}
+Email: ${email}
+Teléfono: ${phone}
+
+Productos:
+${itemsText}
+
+Nota cliente: ${note}
+Código descuento: ${discount}
+¿Regalo?: ${gift ? 'Sí (+4.00 €) — embalaje premium' : 'No'}
+
+Subtotal: ${subtotal.toFixed(2)} €
+Gastos envío: ${deliveryCharge.toFixed(2)} €
+Gastos regalo: ${giftCharge.toFixed(2)} €
+TOTAL: ${total} €
+
+Métodos de pago únicos aceptados: Efectivo con antelación o Bizum al 644677582
+
+(Se recomienda pegar este texto en el formulario de Google Forms con CTRL+V / pegar)
+`;
+
+      try {
+        await navigator.clipboard.writeText(orderText);
+        alert('Tu pedido se ha copiado al portapapeles. Serás redirigido al formulario de pedido.');
+      } catch (err) {
+        prompt('No se pudo copiar automáticamente. Selecciona y copia este texto (Ctrl+C):', orderText);
+      }
+
+      const googleFormURL = 'https://forms.gle/oki3BCVzU2yM1V276';
+      setTimeout(()=> { window.location.href = googleFormURL; }, 800);
+    });
+
+    /* -------------------- UTIL -------------------- */
+    function validateEmail(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        if(productOverlay.classList.contains('active')) closeProductModal();
+        if(checkoutOverlay.classList.contains('active')) closeCheckout();
+      }
+    });
+
+    /* -------------------- INIT -------------------- */
+    renderProducts();
+    renderCartUI();
+
+    document.getElementById('openCartTop').addEventListener('click', ()=>{
+      cartPanel.classList.add('open');
+      document.getElementById('openCartTop').setAttribute('aria-expanded', 'true');
+    });
+
+    document.addEventListener('click', (e)=>{
+      const insidePanel = e.target.closest('#cartPanel');
+      const clickedOpenBtn = e.target.closest('#openCartTop');
+      const clickedCartBtn = e.target.closest('.cart-item button');
+      if(!insidePanel && !clickedOpenBtn && !clickedCartBtn && cartPanel.classList.contains('open')){
+        cartPanel.classList.remove('open');
+        document.getElementById('openCartTop').setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    function addSurprise(){
+      const candidates = products.filter(p => p.id !== 'p_surprise' && p.id !== 'p_elige');
+      const pick = candidates[Math.floor(Math.random()*candidates.length)];
+      addToCart(pick.id);
+      alert(`Te hemos añadido: ${pick.name} (opción "Sorpresa"). Puedes añadir más o finalizar el pedido.`);
+    }
+
+    (function initAddressBlock(){
+      if(deliveryType.value === 'delivery'){
+        addressBlock.classList.add('open');
+        addressBlock.setAttribute('aria-hidden','false');
+      } else {
+        addressBlock.classList.remove('open');
+        addressBlock.setAttribute('aria-hidden','true');
+      }
+    })();
+  </script>
+</body>
+</html>
