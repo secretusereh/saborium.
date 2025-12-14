@@ -55,7 +55,7 @@
       justify-content: center;
       min-height: 100vh;
       text-align: center;
-      padding: 40px;
+      padding: 40px 20px;
     }
 
     .glass-box {
@@ -66,6 +66,8 @@
       box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
       backdrop-filter: blur(12px);
       transition: transform 0.6s ease, box-shadow 0.6s ease;
+      max-width: 90%;
+      width: 100%;
     }
 
     .glass-box:hover {
@@ -84,6 +86,7 @@
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
       animation: shine 6s linear infinite;
     }
 
@@ -102,6 +105,7 @@
       display: flex;
       gap: 40px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -118,6 +122,7 @@
       position: relative;
       overflow: hidden;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
     .btn::before {
@@ -148,7 +153,7 @@
       bottom: 0;
       width: 100%;
       text-align: center;
-      padding: 15px 0;
+      padding: 15px 10px;
       font-size: 0.9em;
       color: #aaa;
       letter-spacing: 1px;
@@ -172,6 +177,147 @@
     @keyframes shine {
       0% { background-position: 200% center; }
       100% { background-position: 0% center; }
+    }
+
+    /* ======= RESPONSIVE MOBILE (hasta 480px) ======= */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      .glass-box {
+        padding: 30px 25px;
+        border-radius: 20px;
+        max-width: 95%;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        letter-spacing: 1px;
+      }
+
+      p {
+        font-size: 0.95em;
+        line-height: 1.6em;
+        margin-top: 20px;
+      }
+
+      .buttons {
+        margin-top: 30px;
+        gap: 15px;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        font-size: 0.95em;
+        width: 100%;
+        max-width: 280px;
+      }
+
+      footer {
+        font-size: 0.75em;
+        padding: 12px 10px;
+      }
+
+      .version {
+        font-size: 0.7em;
+      }
+    }
+
+    /* ======= RESPONSIVE TABLET/IPAD (481px - 768px) ======= */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      .glass-box {
+        padding: 45px 50px;
+        border-radius: 25px;
+        max-width: 85%;
+      }
+
+      h1 {
+        font-size: 3.5em;
+      }
+
+      p {
+        font-size: 1em;
+        line-height: 1.65em;
+      }
+
+      .buttons {
+        margin-top: 40px;
+        gap: 25px;
+      }
+
+      .btn {
+        padding: 14px 35px;
+        font-size: 1em;
+      }
+
+      footer {
+        font-size: 0.85em;
+      }
+    }
+
+    /* ======= RESPONSIVE TABLET GRANDE/IPAD PRO (769px - 1024px) ======= */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .glass-box {
+        padding: 50px 60px;
+        max-width: 80%;
+      }
+
+      h1 {
+        font-size: 4.2em;
+      }
+
+      p {
+        font-size: 1.05em;
+      }
+
+      .buttons {
+        gap: 30px;
+      }
+    }
+
+    /* ======= ORIENTACIÓN HORIZONTAL EN MÓVILES ======= */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .container {
+        padding: 15px 20px;
+      }
+
+      .glass-box {
+        padding: 20px 40px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      p {
+        font-size: 0.85em;
+        margin-top: 10px;
+      }
+
+      .buttons {
+        margin-top: 15px;
+        gap: 15px;
+        flex-direction: row;
+      }
+
+      .btn {
+        padding: 10px 25px;
+        font-size: 0.85em;
+      }
+
+      footer {
+        position: relative;
+        margin-top: 20px;
+        padding: 10px;
+        font-size: 0.7em;
+      }
     }
   </style>
 </head>
@@ -234,7 +380,9 @@
       }
     }
 
-    for (let i = 0; i < 100; i++) particles.push(new Particle());
+    // Ajustar número de partículas según el tamaño de pantalla
+    const particleCount = window.innerWidth < 768 ? 50 : 100;
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
     function animate() {
       ctx.clearRect(0, 0, w, h);
