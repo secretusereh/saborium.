@@ -100,6 +100,65 @@
       font-weight: 400;
     }
 
+    /* ======= CAJA PROMOCIÓN NAVIDAD ======= */
+    .promo-box {
+      margin: 30px auto;
+      padding: 20px 30px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(255,0,0,0.1));
+      border: 2px solid #d4af37;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      max-width: 600px;
+      box-shadow: 0 0 20px rgba(212,175,55,0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .promo-icon {
+      font-size: 2.5em;
+      animation: rotate 3s linear infinite;
+    }
+
+    .promo-text {
+      text-align: left;
+      font-size: 1em;
+      line-height: 1.5em;
+      color: #fff;
+    }
+
+    .promo-text strong {
+      color: #d4af37;
+      font-size: 1.2em;
+      letter-spacing: 1px;
+    }
+
+    .discount {
+      color: #ff6b6b;
+      font-weight: 600;
+      font-size: 1.15em;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+      50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(212,175,55,0.5); }
+    }
+
+    @keyframes rotate {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    /* ======= SUBTÍTULO INDICADOR ======= */
+    .subtitle {
+      margin-top: 35px;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #d4af37;
+      letter-spacing: 0.5px;
+      text-transform: none;
+    }
+
     .buttons {
       margin-top: 50px;
       display: flex;
@@ -109,20 +168,48 @@
     }
 
     .btn {
-      padding: 15px 40px;
+      padding: 20px 35px;
       border: 2px solid #d4af37;
       color: #d4af37;
       background: transparent;
-      font-size: 1.05em;
+      font-size: 1.1em;
       font-family: "Montserrat", sans-serif;
       font-weight: 500;
-      border-radius: 50px;
+      border-radius: 20px;
       cursor: pointer;
       transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
       letter-spacing: 0.5px;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      min-height: 80px;
+    }
+
+    .btn-icon {
+      font-size: 2em;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .btn-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      display: block;
+    }
+
+    .btn-desc {
+      font-size: 0.85em;
+      font-weight: 400;
+      opacity: 0.9;
+      display: block;
     }
 
     .btn::before {
@@ -145,6 +232,10 @@
       color: #000;
       transform: scale(1.05);
       box-shadow: 0 0 15px #d4af37;
+    }
+
+    .btn:hover .btn-icon {
+      transform: scale(1.2);
     }
 
     /* ======= FOOTER ======= */
@@ -202,6 +293,31 @@
         margin-top: 20px;
       }
 
+      .promo-box {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 10px;
+        margin: 20px auto;
+      }
+
+      .promo-icon {
+        font-size: 2em;
+      }
+
+      .promo-text {
+        text-align: center;
+        font-size: 0.9em;
+      }
+
+      .promo-text strong {
+        font-size: 1.1em;
+      }
+
+      .subtitle {
+        font-size: 1.2em;
+        margin-top: 25px;
+      }
+
       .buttons {
         margin-top: 30px;
         gap: 15px;
@@ -210,10 +326,24 @@
       }
 
       .btn {
-        padding: 12px 30px;
-        font-size: 0.95em;
+        padding: 18px 25px;
+        font-size: 1em;
         width: 100%;
-        max-width: 280px;
+        max-width: 100%;
+        min-height: 75px;
+        gap: 12px;
+      }
+
+      .btn-icon {
+        font-size: 1.8em;
+      }
+
+      .btn-title {
+        font-size: 1em;
+      }
+
+      .btn-desc {
+        font-size: 0.8em;
       }
 
       footer {
@@ -328,9 +458,33 @@
     <div class="glass-box">
       <h1>saborium.</h1>
       <p>Una experiencia sensorial que fusiona la alta cocina con la dulzura artesanal.</p>
+      
+      <!-- Mensaje Navidad -->
+      <div class="promo-box">
+        <div class="promo-icon">🎄</div>
+        <div class="promo-text">
+          <strong>¡OFERTA NAVIDEÑA!</strong><br>
+          Pedidos antes del 20 de diciembre con un <span class="discount">10% de descuento</span>
+        </div>
+      </div>
+
+      <h2 class="subtitle">Elige en qué tienda quieres entrar:</h2>
+      
       <div class="buttons">
-        <button class="btn" onclick="window.location.href='sweetsaborium.html'">🍰 Sweet Saborium</button>
-        <button class="btn" onclick="window.location.href='saboriumgourmet.html'">🍷 Saborium Gourmet</button>
+        <button class="btn" onclick="window.location.href='sweetsaborium.html'">
+          <span class="btn-icon">🍰</span>
+          <span class="btn-content">
+            <span class="btn-title">Sweet Saborium</span>
+            <span class="btn-desc">Repostería y dulces</span>
+          </span>
+        </button>
+        <button class="btn" onclick="window.location.href='saboriumgourmet.html'">
+          <span class="btn-icon">🍷</span>
+          <span class="btn-content">
+            <span class="btn-title">Saborium Gourmet</span>
+            <span class="btn-desc">Alta cocina y catering</span>
+          </span>
+        </button>
       </div>
     </div>
   </div>
